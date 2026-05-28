@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBORT // MATRIX EID AL-ADHA ENGINE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700;900&family=Fira+Code:wght@400;500;700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --matrix-green: #00ff66;
+            --matrix-glow: rgba(0, 255, 102, 0.4);
+            --gold-primary: #d4af37;
+            --gold-glow: rgba(214, 175, 55, 0.5);
+            --pure-white: #ffffff;
+            --terminal-dark: #05050a;
+            --panel-bg: rgba(10, 10, 15, 0.85);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--terminal-dark);
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* --- IMMERSIVE BACKGROUND CODE MATRIX CANVASES --- */
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* --- MASSIVE CYBORT WATERMARK OVERLAY --- */
+        .massive-cybort-root-watermark {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(-12deg);
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 16vw;
+            font-weight: 900;
+            color: rgba(0, 255, 102, 0.03); /* Faint Matrix Green Glow */
+            text-transform: uppercase;
+            letter-spacing: 10px;
+            pointer-events: none;
+            user-select: none;
+            z-index: 2;
+            white-space: nowrap;
+            text-align: center;
+            width: 100%;
+        }
+
+        /* Permanent Hacker Anchor Badge */
+        .cybort-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #000000;
+            color: #ffffff;
+            border: 1px solid var(--matrix-green);
+            padding: 12px 18px;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem;
+            z-index: 9999;
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
+            pointer-events: none;
+            letter-spacing: 1px;
+        }
+
+        .cybort-badge span {
+            color: var(--matrix-green);
+            font-weight: 700;
+        }
+
+        /* --- SCREEN 1: TERMINAL INPUT PANELS --- */
+        .gateway-panel {
+            background: var(--panel-bg);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px 30px;
+            border: 1px solid var(--matrix-green);
+            border-radius: 8px;
+            text-align: center;
+            z-index: 10;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 0 30px rgba(0, 255, 102, 0.15);
+            animation: terminalEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .terminal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #1e293b;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.8rem;
+            color: #64748b;
+        }
+
+        .terminal-dots-wrapper {
+            display: flex;
+            gap: 6px;
+        }
+
+        .terminal-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #ef4444;
+        }
+        .terminal-dot.yellow { background: #eab308; }
+        .terminal-dot.green { background: var(--matrix-green); }
+
+        .gateway-panel h2 {
+            color: #ffffff;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.4rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+            letter-spacing: 1px;
+        }
+
+        .gateway-panel p {
+            color: #94a3b8;
+            font-size: 0.85rem;
+            margin-bottom: 30px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 16px;
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            background: #000000;
+            border: 1px solid #334155;
+            border-radius: 4px;
+            color: var(--matrix-green);
+            outline: none;
+            text-align: center;
+            margin-bottom: 24px;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-field:focus {
+            border-color: var(--matrix-green);
+            box-shadow: 0 0 15px rgba(0, 255, 102, 0.3);
+        }
+
+        .exec-button {
+            width: 100%;
+            background: var(--matrix-green);
+            color: #000000;
+            border: none;
+            padding: 16px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.95rem;
+            font-weight: 700;
+            border-radius: 4px;
+            cursor: pointer;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+        }
+
+        .exec-button:hover {
+            background: #ffffff;
+            box-shadow: 0 0 20px #ffffff;
+        }
+
+        /* --- SCREEN 2: MAIN SCROLLABLE GREETING SYSTEM --- */
+        .celebration-layout {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 100vh;
+            background: transparent;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 140px 20px;
+            overflow-y: auto;
+            animation: viewMorph 0.8s ease-out forwards;
+        }
+
+        .main-headline {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 3.2rem;
+            color: #ffffff;
+            text-align: center;
+            margin-bottom: 10px;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .target-identity {
+            font-family: 'Cinzel Decorative', serif;
+            font-size: 2.8rem;
+            color: var(--gold-primary);
+            font-weight: 900;
+            margin-bottom: 20px;
+            text-align: center;
+            word-wrap: break-word;
+            max-width: 850px;
+            text-shadow: 0 0 20px var(--gold-glow);
+        }
+
+        /* Islamic Cluster Deck */
+        .islamic-emoji-deck {
+            font-size: 2.5rem;
+            margin-bottom: 50px;
+            letter-spacing: 16px;
+            text-align: center;
+            user-select: none;
+        }
+
+        /* Prayers Library Container Display */
+        .prayers-catalog {
+            width: 100%;
+            max-width: 850px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        .prayer-card {
+            background: var(--panel-bg);
+            border: 1px solid #1e293b;
+            border-left: 4px solid var(--matrix-green);
+            border-radius: 6px;
+            padding: 35px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .prayer-card:hover {
+            transform: translateY(-3px);
+            border-left-color: var(--gold-primary);
+            border-color: rgba(214, 175, 55, 0.3);
+            box-shadow: 0 15px 35px rgba(214, 175, 55, 0.15);
+        }
+
+        .tech-metadata-header {
+            font-family: 'Fira Code', monospace;
+            font-size: 0.75rem;
+            color: var(--matrix-green);
+            background: #000000;
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 3px;
+            margin-bottom: 25px;
+            border: 1px solid #1e293b;
+        }
+
+        .arabic-script {
+            font-family: 'Traditional Arabic', 'Meiryo', serif;
+            font-size: 2.5rem;
+            color: #ffffff;
+            text-align: right;
+            direction: rtl;
+            line-height: 1.8;
+            margin-bottom: 25px;
+            font-weight: 700;
+            text-shadow: 0 0 10px rgba(255,255,255,0.1);
+        }
+
+        .english-translation {
+            font-size: 1.05rem;
+            line-height: 1.8;
+            color: #94a3b8;
+            border-left: 3px dashed #334155;
+            padding-left: 20px;
+            font-style: italic;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Animation Architectures */
+        @keyframes terminalEntrance {
+            from { opacity: 0; transform: scale(0.95) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        @keyframes viewMorph {
+            from { opacity: 0; } to { opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .main-headline { font-size: 2.2rem; }
+            .target-identity { font-size: 1.8rem; }
+            .arabic-script { font-size: 1.8rem; }
+            .massive-cybort-root-watermark { font-size: 20vw; }
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="matrix-canvas"></canvas>
+
+    <div class="massive-cybort-root-watermark">cybort</div>
+
+    <div class="cybort-badge">
+        CORE RUNTIME: <span>cybort</span>
+    </div>
+
+    <div id="gateway-stage" class="gateway-panel">
+        <div class="terminal-header">
+            <div class="terminal-dots-wrapper">
+                <span class="terminal-dot"></span>
+                <span class="terminal-dot yellow"></span>
+                <span class="terminal-dot green"></span>
+            </div>
+            <span>cybort@root_terminal:~</span>
+        </div>
+        <h2>INITIALIZE MATRIX STRUCT</h2>
+        <p>Inject verification signature payload to execute the greeting protocol:</p>
+        
+        <input type="text" id="visitor-name-input" class="input-field" placeholder="guest_identity_str" maxlength="25" autocomplete="off">
+        <button class="exec-button" onclick="evaluateHandshakeRoutine()">Compile Interface</button>
+    </div>
+
+    <div id="celebration-stage" class="celebration-layout hidden">
+        
+        <h1 class="main-headline">EID AL-ADHA MUBARAK</h1>
+        <div id="compiled-name" class="target-identity"></div>
+
+        <div class="islamic-emoji-deck">🕋 🌙 🕌 ✨</div>
+
+        <div class="prayers-catalog">
+            
+            <div class="prayer-card">
+                <div class="tech-metadata-header">EXEC_NODE // TAKBEERAT_DECRYPTED</div>
+                <div class="arabic-script">
+                    اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، لَا إِلَهَ إِلَّا اللَّهُ، اللَّهُ أَكْبَرُ، اللَّهُ أَكْبَرُ، وَلِلَّهِ الْحَمْدُ
+                </div>
+                <div class="english-translation">
+                    "Allah is the greatest, Allah is the greatest, Allah is the greatest. There is no deity worthy of worship besides Allah. Allah is the greatest, Allah is the greatest, and to Allah belongs all praise."
+                </div>
+            </div>
+
+            <div class="prayer-card">
+                <div class="tech-metadata-header">EXEC_NODE // SACRIFICIAL_QURBANI_RECORD</div>
+                <div class="arabic-script">
+                    إِنَّ صَلَاتِي وَنُسُكِي وَمَحْيَايَ وَمَمَاتِي لِلَّهِ رَبِّ الْعَالَمِينَ ۝ لَا شَرِيكَ لَهُ ۖ وَبِذَٰلِكَ أُمِرْتُ وَأَنَا أَوَّلُ الْمُسْلِمِينَ
+                </div>
+                <div class="english-translation">
+                    "Say, 'Indeed, my prayer, my rites of sacrifice, my living and my dying are for Allah, Lord of the worlds. No partner has He. And this I have been commanded, and I am the first of the Muslims.'"
+                </div>
+            </div>
+
+            <div class="prayer-card">
+                <div class="tech-metadata-header">EXEC_NODE // IBRAHIMIC_FAITH_CONFIRMATION</div>
+                <div class="arabic-script">
+                    بِسْمِ اللَّهِ وَاللَّهُ أَكْبَرُ، اللَّهُمَّ تقَبَّلْ مِنِّي كَمَا تَقَبَّلْتَ مِنْ إِبْرَاهِيمَ خَلِيلِكَ
+                </div>
+                <div class="english-translation">
+                    "In the name of Allah, and Allah is the Greatest. O Allah, accept this sacrifice from me just as You accepted it from Your close friend Ibrahim."
+                </div>
+            </div>
+
+            <div class="prayer-card">
+                <div class="tech-metadata-header">EXEC_NODE // GLOBAL_PROTECTION_DUA</div>
+                <div class="arabic-script">
+                    رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ
+                </div>
+                <div class="english-translation">
+                    "Our Lord, give us in this world [that which is] good and in the Hereafter [that which is] good and protect us from the punishment of the Fire."
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        /* --- HIGH VELOCITY DOUBLE GRAPHICS PIPELINE: DIGITAL RAIN + VECTOR STARS --- */
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+
+        function resizeCanvasToViewport() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resizeCanvasToViewport();
+        window.addEventListener('resize', resizeCanvasToViewport);
+
+        // Core Matrix Variables Setup
+        const matrixSymbols = "0101010101010101010101010101010101010101010101010101010101010101";
+        const symbolArray = matrixSymbols.split("");
+        const fontSize = 16;
+        let columns = canvas.width / fontSize;
+        let rainDrops = [];
+
+        function initMatrixRaindropLayout() {
+            columns = canvas.width / fontSize;
+            rainDrops = [];
+            for (let x = 0; x < columns; x++) {
+                rainDrops[x] = Math.random() * -50; // Random staggered offsets above window top
+            }
+        }
+        initMatrixRaindropLayout();
+
+        // Star Vector Array Architecture
+        let starsArray = [];
+        const maxStarsCount = 25;
+
+        class MovingIslamicStar {
+            constructor() {
+                this.generateProperties();
+                this.y = Math.random() * canvas.height; // Spread out across page at boot
+            }
+
+            generateProperties() {
+                this.x = Math.random() * canvas.width;
+                this.y = -30;
+                this.size = Math.random() * 8 + 5;
+                this.speed = Math.random() * 0.6 + 0.2;
+                this.opacity = Math.random() * 0.6 + 0.2;
+                this.pulseSpeed = Math.random() * 0.006 + 0.002;
+                this.pulseDir = 1;
+            }
+
+            update() {
+                this.y += this.speed;
+                this.opacity += this.pulseSpeed * this.pulseDir;
+                
+                if (this.opacity > 0.85 || this.opacity < 0.15) {
+                    this.pulseDir = -this.pulseDir;
+                }
+                if (this.y > canvas.height + 30) {
+                    this.generateProperties();
+                }
+            }
+
+            draw() {
+                ctx.save();
+                ctx.globalAlpha = this.opacity;
+                ctx.fillStyle = "#d4af37";
+                ctx.shadowBlur = 15;
+                ctx.shadowColor = "#d4af37";
+
+                ctx.beginPath();
+                let spikes = 8; // Authentic 8-Point Geometric Islamic Vector Star
+                let outerRadius = this.size;
+                let innerRadius = this.size / 2;
+                let rot = Math.PI / 2 * 3;
+                let step = Math.PI / spikes;
+
+                ctx.moveTo(this.x, this.y - outerRadius);
+                for (let i = 0; i < spikes; i++) {
+                    let lx = this.x + Math.cos(rot) * outerRadius;
+                    let ly = this.y + Math.sin(rot) * outerRadius;
+                    ctx.lineTo(lx, ly);
+                    rot += step;
+
+                    lx = this.x + Math.cos(rot) * innerRadius;
+                    ly = this.y + Math.sin(rot) * innerRadius;
+                    ctx.lineTo(lx, ly);
+                    rot += step;
+                }
+                ctx.closePath();
+                ctx.fill();
+                ctx.restore();
+            }
+        }
+
+        for(let i=0; i<maxStarsCount; i++) {
+            starsArray.push(new MovingIslamicStar());
+        }
+
+        // Processing Animation Frame Loop Execution
+        function renderGraphicsPipeline() {
+            // Dark overlay trail for authentic glowing digital tail drop effect
+            ctx.fillStyle = "rgba(5, 5, 10, 0.12)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            // Matrix Binary Streams Render Loop Step
+            ctx.fillStyle = "rgba(0, 255, 102, 0.35)"; // Hacker Green
+            ctx.font = "bold " + fontSize + "px monospace";
+
+            for (let i = 0; i < rainDrops.length; i++) {
+                const targetText = symbolArray[Math.floor(Math.random() * symbolArray.length)];
+                ctx.fillText(targetText, i * fontSize, rainDrops[i] * fontSize);
+
+                // Reset stream to top randomly once it hits the bottom
+                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.98) {
+                    rainDrops[i] = 0;
+                }
+                rainDrops[i]++;
+            }
+
+            // Star Vectors Render Loop Step
+            starsArray.forEach(star => {
+                star.update();
+                star.draw();
+            });
+
+            requestAnimationFrame(renderGraphicsPipeline);
+        }
+        renderGraphicsPipeline();
+
+
+        /* --- APPLICATION INTERACTION STATE MACHINE CONTROLLERS --- */
+        function evaluateHandshakeRoutine() {
+            const inputNode = document.getElementById('visitor-name-input');
+            const targetIdentity = inputNode.value.trim();
+
+            if (targetIdentity === "") {
+                alert("Security Core Failure: Missing signature parameter streams.");
+                return;
+            }
+
+            compileAndRenderCelebrationModule(targetIdentity);
+        }
+
+        function compileAndRenderCelebrationModule(sanitizedNameString) {
+            const targetContainer = document.getElementById('compiled-name');
+            // Strict text node configuration mapping safely rules out XSS injection points
+            targetContainer.textContent = sanitizedNameString;
+
+            const inputGatewayElement = document.getElementById('gateway-stage');
+            if (inputGatewayElement) inputGatewayElement.remove();
+
+            document.getElementById('celebration-stage').classList.remove('hidden');
+        }
+
+        // Automatic Check Hook: Monitors dynamic parameter loops directly (?name=XYZ)
+        window.addEventListener('DOMContentLoaded', () => {
+            const searchQueries = new URLSearchParams(window.location.search);
+            const userParameterString = searchQueries.get('name');
+
+            if (userParameterString && userParameterString.trim() !== "") {
+                compileAndRenderCelebrationModule(userParameterString.trim());
+            }
+        });
+
+        // Track active terminal inputs tracking keyboard "Enter" executions
+        document.getElementById('visitor-name-input').addEventListener('keypress', (event) => {
+            if (event.key === 'Enter') evaluateHandshakeRoutine();
+        });
+    </script>
+</body>
+</html>
